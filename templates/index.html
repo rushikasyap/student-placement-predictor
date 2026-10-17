@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered Student Placement & Career Intelligence. Predict placement likelihood, salary package tiers, and receive personalized skill gap roadmaps using Machine Learning.">
+    <title>PlacePredict AI - Machine Learning Student Placement Prediction</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="dark-theme">
+    <!-- Background Animated Gradient Orbs -->
+    <div class="bg-blur-orb orb-1"></div>
+    <div class="bg-blur-orb orb-2"></div>
+    <div class="bg-blur-orb orb-3"></div>
+
+    <!-- Navigation Bar -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">PlacePredict<span class="gradient-text">.AI</span></span>
+                    <span class="brand-badge">ML v2.4</span>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs" id="mainNav">
+                <button class="nav-link active" data-tab="tab-predict" id="navPredict">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Student Predictor
+                </button>
+                <button class="nav-link" data-tab="tab-whatif" id="navWhatIf">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    What-If Simulator
+                </button>
+                <button class="nav-link" data-tab="tab-batch" id="navBatch">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    Batch Analytics
+                </button>
+                <button class="nav-link" data-tab="tab-model" id="navModel">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    Model Intelligence
+                </button>
+                <button class="nav-link" data-tab="tab-database" id="navDatabase">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                    Database Records
+                </button>
+            </nav>
+
+            <div class="header-actions">
+                <div class="db-status-pill" id="headerDbStatus" title="Neon Database Connection">
+                    <span class="db-status-dot"></span>
+                    <span id="headerDbText">Database Ready</span>
+                </div>
+                <button class="theme-toggle-btn" id="themeToggle" title="Toggle Light / Dark Mode">
+                    <span class="icon-sun">☀️</span>
+                    <span class="icon-moon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-layout">
+        <!-- Hero Header -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="status-pill">
+                    <span class="pulse-dot"></span>
+                    <span>Ensemble ML Engine (Random Forest + Gradient Boosting)</span>
+                </div>
+                <h1 class="hero-title">Student Placement & Career <span class="gradient-text">Readiness Intelligence</span></h1>
+                <p class="hero-subtitle">
+                    Evaluate campus placement odds, predict expected CTC package tiers, discover matching job roles, and uncover actionable roadmaps powered by machine learning algorithms.
+                </p>
+            </div>
+            
+            <!-- Quick ML Highlight Stats -->
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <span class="stat-num" id="heroAcc">85.7%</span>
+                    <span class="stat-label">Model Accuracy</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-num" id="heroRoc">0.903</span>
+                    <span class="stat-label">ROC - AUC Score</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-num">3,000+</span>
+                    <span class="stat-label">Validated Profiles</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 1: INDIVIDUAL STUDENT PREDICTOR -->
+        <!-- ============================================== -->
+        <div class="tab-pane active" id="tab-predict">
+            <!-- Quick Preset Selectors -->
+            <div class="preset-bar-container">
+                <span class="preset-label">⚡ Load Instant Persona:</span>
+                <div class="preset-buttons" id="presetButtonsContainer">
+                    {% for key, p in presets.items() %}
+                    <button type="button" class="preset-btn" data-preset="{{ key }}" id="btnPreset_{{ key }}">
+                        {{ p.title }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="predictor-grid">
+                <!-- FORM COLUMN -->
+                <div class="form-card glass-panel">
+                    <div class="card-header">
+                        <div class="header-title-group">
+                            <span class="card-tag">Profile Configuration</span>
+                            <h2 class="card-title">Student Academic & Skill Vector</h2>
+                        </div>
+                        <button type="button" class="btn-text-secondary" id="resetFormBtn">Reset to Default</button>
+                    </div>
+
+                    <form id="predictionForm" class="profile-form">
+                        <!-- Student Basics -->
+                        <div class="form-row two-col">
+                            <div class="form-group">
+                                <label for="studentName" class="form-label">Student Name / Roll No.</label>
+                                <input type="text" id="studentName" class="form-control" placeholder="e.g. Aarav Sharma" value="Aarav Sharma" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="branchSelect" class="form-label">Degree Stream / Branch</label>
+                                <select id="branchSelect" class="form-control" required>
+                                    {% for b in branches %}
+                                    <option value="{{ b }}" {% if b == 'Computer Science' %}selected{% endif %}>{{ b }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Academic & Core Ratings -->
+                        <div class="form-section-title">Academic & Technical Evaluation</div>
+
+                        <!-- CGPA Slider -->
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label for="cgpaInput" class="slider-label">Cumulative GPA (CGPA)</label>
+                                <div class="slider-badge">
+                                    <span class="slider-val" id="cgpaVal">8.5</span> <span class="slider-unit">/ 10</span>
+                                </div>
+                            </div>
+                            <input type="range" id="cgpaInput" min="5.0" max="10.0" step="0.1" value="8.5" class="slider">
+                            <div class="slider-scale">
+                                <span>5.0 (Pass)</span>
+                                <span>7.5 (First Class)</span>
+                                <span>10.0 (Gold Medal)</span>
+                            </div>
+                        </div>
+
+                        <!-- DSA / Coding Score -->
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label for="dsaInput" class="slider-label">DSA & Coding Assessment</label>
+                                <div class="slider-badge">
+                                    <span class="slider-val" id="dsaVal">82</span> <span class="slider-unit">/ 100</span>
+                                </div>
+                            </div>
+                            <input type="range" id="dsaInput" min="10" max="100" step="1" value="82" class="slider">
+                            <div class="slider-scale">
+                                <span>Novice (&lt;40)</span>
+                                <span>Intermediate (60-75)</span>
+                                <span>Elite SDE (&gt;85)</span>
+                            </div>
+                        </div>
+
+                        <!-- Aptitude Score -->
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label for="aptitudeInput" class="slider-label">Quantitative & Logical Aptitude</label>
+                                <div class="slider-badge">
+                                    <span class="slider-val" id="aptitudeVal">78</span> <span class="slider-unit">/ 100</span>
+                                </div>
+                            </div>
+                            <input type="range" id="aptitudeInput" min="15" max="100" step="1" value="78" class="slider">
+                            <div class="slider-scale">
+                                <span>Needs Work</span>
+                                <span>Company Cutoff (65+)</span>
+                                <span>Top Percentile</span>
+                            </div>
+                        </div>
+
+                        <!-- Communication Score -->
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <label for="commInput" class="slider-label">Communication & HR Soft Skills</label>
+                                <div class="slider-badge">
+                                    <span class="slider-val" id="commVal">80</span> <span class="slider-unit">/ 100</span>
+                                </div>
+                            </div>
+                            <input type="range" id="commInput" min="20" max="100" step="1" value="80" class="slider">
+                            <div class="slider-scale">
+                                <span>Introductory</span>
+                                <span>Fluent & Professional</span>
+                                <span>Executive Articulation</span>
+                            </div>
+                        </div>
+
+                        <!-- Experience & Project Metrics -->
+                        <div class="form-section-title">Industry Exposure & Portfolio</div>
+
+                        <div class="form-row four-col">
+                            <div class="counter-input-group">
+                                <label class="counter-label">Internships</label>
+                                <div class="counter-box">
+                                    <button type="button" class="btn-counter" data-action="dec" data-target="internshipsInput">-</button>
+                                    <input type="number" id="internshipsInput" min="0" max="4" value="2" class="counter-input" readonly>
+                                    <button type="button" class="btn-counter" data-action="inc" data-target="internshipsInput">+</button>
+                                </div>
+                                <span class="sub-hint">Max 4</span>
+                            </div>
+
+                            <div class="counter-input-group">
+                                <label class="counter-label">Projects</label>
+                                <div class="counter-box">
+                                    <button type="button" class="btn-counter" data-action="dec" data-target="projectsInput">-</button>
+                                    <input type="number" id="projectsInput" min="0" max="8" value="4" class="counter-input" readonly>
+                                    <button type="button" class="btn-counter" data-action="inc" data-target="projectsInput">+</button>
+                                </div>
+                                <span class="sub-hint">Full-stack / AI</span>
+                            </div>
+
+                            <div class="counter-input-group">
+                                <label class="counter-label">Active Backlogs</label>
+                                <div class="counter-box warning-box">
+                                    <button type="button" class="btn-counter" data-action="dec" data-target="backlogsInput">-</button>
+                                    <input type="number" id="backlogsInput" min="0" max="6" value="0" class="counter-input" readonly>
+                                    <button type="button" class="btn-counter" data-action="inc" data-target="backlogsInput">+</button>
+                                </div>
+                                <span class="sub-hint">Strict filter</span>
+                            </div>
+
+                            <div class="counter-input-group">
+                                <label class="counter-label">Certifications</label>
+                                <div class="counter-box">
+                                    <button type="button" class="btn-counter" data-action="dec" data-target="certificationsInput">-</button>
+                                    <input type="number" id="certificationsInput" min="0" max="5" value="3" class="counter-input" readonly>
+                                    <button type="button" class="btn-counter" data-action="inc" data-target="certificationsInput">+</button>
+                                </div>
+                                <span class="sub-hint">Cloud / ML / Dev</span>
+                            </div>
+                        </div>
+
+                        <!-- Work Exp (Months) -->
+                        <div class="form-row single-col">
+                            <div class="form-group">
+                                <label for="workExpInput" class="form-label">Part-time / Freelance / Pre-Placement Work Experience (Months)</label>
+                                <div class="chip-options" id="workExpChips">
+                                    <button type="button" class="chip-btn" data-val="0">0 Months</button>
+                                    <button type="button" class="chip-btn active" data-val="6">6 Months</button>
+                                    <button type="button" class="chip-btn" data-val="12">12 Months</button>
+                                    <button type="button" class="chip-btn" data-val="18">18+ Months</button>
+                                </div>
+                                <input type="hidden" id="workExpInput" value="6">
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary-glow" id="predictBtn">
+                                <span class="btn-icon">⚡</span>
+                                <span class="btn-text">Generate Placement Prediction</span>
+                                <span class="btn-loader-spinner" style="display: none;"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- RESULTS COLUMN -->
+                <div class="results-column">
+                    <!-- PREDICTION SUMMARY CARD -->
+                    <div class="results-card glass-panel" id="resultsCard">
+                        <div class="results-header">
+                            <div>
+                                <span class="card-tag">Prediction Analysis</span>
+                                <h2 class="card-title" id="resStudentTitle">Placement Readiness Outcome</h2>
+                            </div>
+                            <div class="results-actions">
+                                <button type="button" class="btn-icon-action" id="printScorecardBtn" title="Print Placement Report Card">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                    Print Scorecard
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Main Outcome Banner -->
+                        <div class="outcome-banner">
+                            <!-- Gauge Meter Container -->
+                            <div class="gauge-container">
+                                <div class="gauge-circle-wrap">
+                                    <svg class="gauge-svg" viewBox="0 0 120 120">
+                                        <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
+                                        <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="50"></circle>
+                                    </svg>
+                                    <div class="gauge-content">
+                                        <span class="gauge-value" id="resProb">--%</span>
+                                        <span class="gauge-caption">Probability</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Outcome Details -->
+                            <div class="outcome-meta">
+                                <div class="status-badge-wrap">
+                                    <span class="badge-status badge-success" id="resStatusBadge">High Chance</span>
+                                    <span class="branch-pill" id="resBranchPill">Computer Science</span>
+                                </div>
+                                <h3 class="outcome-heading" id="resHeading">Strong Candidate For Campus Placement</h3>
+                                <p class="outcome-desc" id="resDesc">
+                                    Student displays exceptional balance in coding assessments, projects, and academic pedigree.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CTC Salary Package Card -->
+                        <div class="ctc-package-card">
+                            <div class="ctc-header">
+                                <span class="ctc-tag">Estimated Package Tier</span>
+                                <span class="ctc-badge-pill" id="resTierTag">Software Development Engineer</span>
+                            </div>
+                            <div class="ctc-body">
+                                <div class="ctc-main-val" id="resCtcRange">INR 10.5 - 17.5 LPA</div>
+                                <div class="ctc-tier-title" id="resCtcTitle">Tier 1 (Product Companies & Global Tech)</div>
+                            </div>
+                            <div class="ctc-companies-row">
+                                <span class="companies-label">Recruiter Cohort:</span>
+                                <div class="company-tags" id="resCompaniesList">
+                                    <span class="company-chip">Oracle</span>
+                                    <span class="company-chip">SAP Labs</span>
+                                    <span class="company-chip">Cisco</span>
+                                    <span class="company-chip">Optum</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Competency Radar & Career Matches Grid -->
+                        <div class="analytics-subgrid">
+                            <!-- Radar Chart -->
+                            <div class="sub-panel">
+                                <h4 class="sub-panel-title">
+                                    <span>5D Competency Radar</span>
+                                    <span class="legend-note"><span class="dot-student"></span> Student vs <span class="dot-benchmark"></span> Benchmark</span>
+                                </h4>
+                                <div class="chart-box">
+                                    <canvas id="competencyRadarChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Career Recommendations -->
+                            <div class="sub-panel">
+                                <h4 class="sub-panel-title">Top Role Matches</h4>
+                                <div class="roles-list" id="resRolesContainer">
+                                    <!-- Populated dynamically via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Explainable AI Drivers -->
+                        <div class="explainable-section">
+                            <h4 class="sub-panel-title">ML Feature Contribution (Explainable AI)</h4>
+                            <div class="drivers-grid" id="resDriversContainer">
+                                <!-- Populated dynamically via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Action Roadmap -->
+                        <div class="roadmap-section">
+                            <h4 class="sub-panel-title">Strategic Action Roadmap & Gap Analysis</h4>
+                            <div class="roadmap-steps" id="resRoadmapContainer">
+                                <!-- Populated dynamically via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: INTERACTIVE WHAT-IF SIMULATOR -->
+        <!-- ============================================== -->
+        <div class="tab-pane" id="tab-whatif">
+            <div class="whatif-container glass-panel">
+                <div class="whatif-header">
+                    <div>
+                        <span class="card-tag">Sensitivity Analysis</span>
+                        <h2 class="card-title">Real-Time What-If Sensitivity Simulator</h2>
+                        <p class="whatif-subtext">
+                            Drag the sliders below to see instantly how improving your CGPA, taking on an internship, or grinding DSA changes your placement odds in real-time.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="whatif-dashboard">
+                    <!-- Live Dynamic Sliders -->
+                    <div class="whatif-controls">
+                        <div class="whatif-slider-box">
+                            <div class="wslider-head">
+                                <span class="wslider-title">CGPA Target</span>
+                                <span class="wslider-reading" id="wiCgpaDisplay">8.5</span>
+                            </div>
+                            <input type="range" id="wiCgpa" min="5.0" max="10.0" step="0.1" value="8.5" class="slider slider-blue">
+                        </div>
+
+                        <div class="whatif-slider-box">
+                            <div class="wslider-head">
+                                <span class="wslider-title">DSA & Problem Solving Score</span>
+                                <span class="wslider-reading" id="wiDsaDisplay">80</span>
+                            </div>
+                            <input type="range" id="wiDsa" min="15" max="100" step="1" value="80" class="slider slider-purple">
+                        </div>
+
+                        <div class="whatif-slider-box">
+                            <div class="wslider-head">
+                                <span class="wslider-title">Number of Internships</span>
+                                <span class="wslider-reading" id="wiInternshipsDisplay">2</span>
+                            </div>
+                            <input type="range" id="wiInternships" min="0" max="4" step="1" value="2" class="slider slider-green">
+                        </div>
+
+                        <div class="whatif-slider-box">
+                            <div class="wslider-head">
+                                <span class="wslider-title">Active Backlogs</span>
+                                <span class="wslider-reading danger-text" id="wiBacklogsDisplay">0</span>
+                            </div>
+                            <input type="range" id="wiBacklogs" min="0" max="5" step="1" value="0" class="slider slider-red">
+                        </div>
+
+                        <div class="whatif-slider-box">
+                            <div class="wslider-head">
+                                <span class="wslider-title">Communication & Soft Skills</span>
+                                <span class="wslider-reading" id="wiCommDisplay">75</span>
+                            </div>
+                            <input type="range" id="wiComm" min="20" max="100" step="1" value="75" class="slider slider-amber">
+                        </div>
+                    </div>
+
+                    <!-- Live Instant Output Card -->
+                    <div class="whatif-display-panel">
+                        <div class="live-indicator">
+                            <span class="live-pulse"></span> LIVE SIMULATOR
+                        </div>
+
+                        <div class="sim-probability-box">
+                            <span class="sim-label">Simulated Placement Likelihood</span>
+                            <div class="sim-number" id="wiProbNum">91.4%</div>
+                            <div class="sim-status-pill" id="wiStatusPill">High Chance of Placement</div>
+                        </div>
+
+                        <div class="sim-tier-box">
+                            <span class="sim-label">Expected CTC Bracket</span>
+                            <div class="sim-ctc-val" id="wiCtcVal">INR 10.5 - 17.5 LPA</div>
+                            <div class="sim-tier-label" id="wiTierLabel">Tier 1 Product Companies</div>
+                        </div>
+
+                        <div class="simulation-tip-card">
+                            <span class="tip-icon">💡</span>
+                            <div class="tip-content">
+                                <strong>AI Simulation Insight:</strong>
+                                <p id="wiInsightText">
+                                    Keeping backlogs at 0 and raising DSA score above 75 pushes you into the top 15% placement bracket.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 3: BATCH PLACEMENT ANALYZER (CSV) -->
+        <!-- ============================================== -->
+        <div class="tab-pane" id="tab-batch">
+            <div class="batch-layout glass-panel">
+                <div class="batch-header">
+                    <div>
+                        <span class="card-tag">College Placement Cell Suite</span>
+                        <h2 class="card-title">Batch Student Placement Prediction & Analytics</h2>
+                        <p class="batch-subtitle">
+                            Upload a batch CSV file with candidate records or run the pre-loaded 20-student cohort to inspect cohort readiness, department trends, and at-risk students.
+                        </p>
+                    </div>
+                    <div class="batch-header-btns">
+                        <button type="button" class="btn-secondary" id="btnDownloadTemplate">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Download Sample CSV
+                        </button>
+                        <button type="button" class="btn-primary-glow" id="btnRunSampleBatch">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Run Demo Cohort (20 Students)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CSV Upload Drag-and-Drop Area -->
+                <div class="upload-zone" id="uploadZone">
+                    <input type="file" id="batchFileInput" accept=".csv" style="display: none;">
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        </div>
+                        <h3 class="upload-title">Drop your student batch CSV here, or <span class="browse-link">browse file</span></h3>
+                        <p class="upload-hint">Supported columns: student_name, branch, cgpa, internships, projects, dsa_score, aptitude_score, communication_score, backlogs</p>
+                    </div>
+                </div>
+
+                <!-- Batch Analytics Results (Hidden until loaded) -->
+                <div class="batch-results-container" id="batchResultsContainer" style="display: none;">
+                    <!-- Key KPI Summary Cards -->
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <span class="kpi-num" id="kpiTotal">20</span>
+                            <span class="kpi-label">Total Candidates Evaluated</span>
+                        </div>
+                        <div class="kpi-card kpi-success">
+                            <span class="kpi-num" id="kpiRate">85.0%</span>
+                            <span class="kpi-label">Overall Placement Rate</span>
+                        </div>
+                        <div class="kpi-card kpi-highlight">
+                            <span class="kpi-num" id="kpiHigh">12</span>
+                            <span class="kpi-label">High Chance (Tier 1/Super Dream)</span>
+                        </div>
+                        <div class="kpi-card kpi-warning">
+                            <span class="kpi-num" id="kpiModerate">5</span>
+                            <span class="kpi-label">Moderate / Borderline</span>
+                        </div>
+                        <div class="kpi-card kpi-danger">
+                            <span class="kpi-num" id="kpiAtRisk">3</span>
+                            <span class="kpi-label">At Risk (Urgent Prep Required)</span>
+                        </div>
+                    </div>
+
+                    <!-- Batch Charts Grid -->
+                    <div class="batch-charts-grid">
+                        <div class="batch-chart-card">
+                            <h4 class="sub-panel-title">Placement Likelihood Distribution</h4>
+                            <div class="chart-box-donut">
+                                <canvas id="batchDoughnutChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="batch-chart-card">
+                            <h4 class="sub-panel-title">Branch-Wise Placement Readiness</h4>
+                            <div class="chart-box-bar">
+                                <canvas id="batchBranchChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Students Table -->
+                    <div class="batch-table-card">
+                        <div class="table-header-row">
+                            <h4 class="sub-panel-title">Detailed Candidate Placement Predictions</h4>
+                            <button type="button" class="btn-text-secondary" id="btnExportBatchResults">Export Table as CSV</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="batchTable">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Branch</th>
+                                        <th>CGPA</th>
+                                        <th>DSA Score</th>
+                                        <th>Internships</th>
+                                        <th>Backlogs</th>
+                                        <th>Placement Odds</th>
+                                        <th>Status</th>
+                                        <th>Target Package</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="batchTableBody">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 4: MODEL TRANSPARENCY & PIPELINE INFO -->
+        <!-- ============================================== -->
+        <div class="tab-pane" id="tab-model">
+            <div class="model-info-grid">
+                <!-- Architecture Card -->
+                <div class="info-card glass-panel">
+                    <span class="card-tag">Architecture</span>
+                    <h2 class="card-title">Dual-Ensemble Machine Learning Pipeline</h2>
+                    <p class="model-text">
+                        The prediction engine utilizes a high-performance ensemble of <strong>Random Forest Classifiers</strong> and <strong>Gradient Boosting Machines (GBM)</strong>. Feature weights are learned from multi-dimensional student performance vectors covering academics, competitive coding, aptitude, practical software engineering portfolio, and industry internships.
+                    </p>
+
+                    <div class="pipeline-flow">
+                        <div class="flow-step">
+                            <div class="step-num">1</div>
+                            <div class="step-content">
+                                <strong>Feature Ingestion &amp; Encoding</strong>
+                                <span>CGPA, DSA, Aptitude, Soft skills, One-Hot encoded branch vectors</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="step-num">2</div>
+                            <div class="step-content">
+                                <strong>Ensemble Soft Voting</strong>
+                                <span>Weighted probability fusion: <code>0.55 * P(RF) + 0.45 * P(GBM)</code></span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="step-num">3</div>
+                            <div class="step-content">
+                                <strong>Secondary CTC Multi-Tier Model</strong>
+                                <span>Multi-class package tier prediction (Tier 3 through Super Dream)</span>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="step-num">4</div>
+                            <div class="step-content">
+                                <strong>Explainability &amp; Gap Diagnostics</strong>
+                                <span>Dynamic feature contribution and personalized action roadmap generation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics & Confusion Matrix -->
+                <div class="info-card glass-panel">
+                    <span class="card-tag">Validation Metrics</span>
+                    <h2 class="card-title">Cross-Validated Model Performance</h2>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <span class="m-val" id="modelAcc">85.7%</span>
+                            <span class="m-label">Accuracy</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-val" id="modelPrec">86.3%</span>
+                            <span class="m-label">Precision</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-val" id="modelRec">97.0%</span>
+                            <span class="m-label">Recall</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-val" id="modelRoc">0.903</span>
+                            <span class="m-label">ROC - AUC</span>
+                        </div>
+                    </div>
+
+                    <!-- Feature Importance Chart -->
+                    <div class="fi-section">
+                        <h4 class="sub-panel-title">Top Feature Importances (Random Forest)</h4>
+                        <div class="chart-box-fi">
+                            <canvas id="featureImportanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 5: DATABASE RECORDS & NEON DB CONNECT -->
+        <!-- ============================================== -->
+        <div class="tab-pane" id="tab-database">
+            <div class="batch-layout glass-panel">
+                <div class="batch-header">
+                    <div>
+                        <span class="card-tag">Cloud &amp; Local Persistence</span>
+                        <h2 class="card-title">Live Candidate Database (Neon PostgreSQL)</h2>
+                        <p class="batch-subtitle">
+                            Every prediction run on this platform is stored securely in the database. Connect to Neon Cloud PostgreSQL for persistent cloud storage across sessions.
+                        </p>
+                    </div>
+                    <div class="batch-header-btns">
+                        <button type="button" class="btn-secondary" id="btnRefreshHistory">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+                            Refresh Records
+                        </button>
+                        <button type="button" class="btn-primary-glow" id="btnConfigureNeonModal">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                            Connect Neon DB
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Database Status Info Banner -->
+                <div class="neon-config-banner" id="neonBanner">
+                    <div class="neon-banner-icon">⚡</div>
+                    <div class="neon-banner-text">
+                        <div class="neon-banner-title">
+                            <strong id="dbBannerType">Active Database: Loading...</strong>
+                            <span class="badge-status badge-success" id="dbBannerBadge">Connected</span>
+                        </div>
+                        <p id="dbBannerDesc">Connected and persisting all student evaluation history, probabilities, and role recommendations.</p>
+                    </div>
+                </div>
+
+                <!-- Database Records Table -->
+                <div class="batch-table-card">
+                    <div class="table-header-row">
+                        <h4 class="sub-panel-title">Saved Student Evaluations (<span id="dbRecordCount">0</span> records)</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="dbTable">
+                            <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th>Student Name</th>
+                                    <th>Branch</th>
+                                    <th>CGPA</th>
+                                    <th>DSA</th>
+                                    <th>Probability</th>
+                                    <th>Status</th>
+                                    <th>CTC Range</th>
+                                    <th>Top Role</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dbTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- NEON DATABASE CONFIGURATION MODAL -->
+    <div class="modal-overlay" id="neonModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Connect to Neon Cloud Database</h3>
+                <button type="button" class="btn-close" id="closeNeonModalBtn">✕</button>
+            </div>
+            <div class="scorecard-body">
+                <p style="font-size: 0.9rem; color: #475569; margin-bottom: 16px;">
+                    Paste your Neon PostgreSQL connection string below. You can find this in your <a href="https://console.neon.tech/" target="_blank" style="color: #6366f1; font-weight: bold;">Neon Console</a> under <strong>Connection Details</strong>.
+                </p>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label class="form-label" style="color: #0f172a; font-weight: 700;">Neon DATABASE_URL</label>
+                    <input type="password" id="neonUrlInput" class="form-control" style="background: #f8fafc; color: #0f172a; border-color: #cbd5e1;" placeholder="postgresql://user:password@ep-host.us-east-2.aws.neon.tech/neondb?sslmode=require">
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn-secondary" id="cancelNeonBtn" style="color: #0f172a; border-color: #cbd5e1;">Cancel</button>
+                    <button type="button" class="btn-primary" id="saveNeonBtn">Save &amp; Connect Neon DB</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRINTABLE SCORECARD MODAL (Hidden by default, triggered on Print) -->
+    <div class="modal-overlay" id="scorecardModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Student Placement Readiness Certificate</h3>
+                <div class="modal-controls">
+                    <button type="button" class="btn-primary" id="triggerPrintBtn">🖨️ Print / Save as PDF</button>
+                    <button type="button" class="btn-close" id="closeScorecardBtn">✕</button>
+                </div>
+            </div>
+            <div class="scorecard-body" id="printableContent">
+                <div class="sc-header">
+                    <div class="sc-brand">
+                        <h2>PlacePredict.AI</h2>
+                        <span>Candidate Placement Competency Assessment</span>
+                    </div>
+                    <div class="sc-badge">OFFICIAL ML EVALUATION</div>
+                </div>
+
+                <div class="sc-student-info">
+                    <div class="sc-row">
+                        <div class="sc-col"><strong>Candidate Name:</strong> <span id="scName">Aarav Sharma</span></div>
+                        <div class="sc-col"><strong>Branch:</strong> <span id="scBranch">Computer Science</span></div>
+                    </div>
+                    <div class="sc-row">
+                        <div class="sc-col"><strong>Placement Probability:</strong> <span id="scProb" class="accent-text">92.4%</span></div>
+                        <div class="sc-col"><strong>Projected CTC Bracket:</strong> <span id="scCtc">INR 10.5 - 17.5 LPA</span></div>
+                    </div>
+                </div>
+
+                <div class="sc-section">
+                    <h4>Core Competency Breakdown</h4>
+                    <table class="sc-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Candidate Value</th>
+                                <th>Status / Benchmark</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sc-section">
+                    <h4>Recommended Career Roles</h4>
+                    <div id="scRolesList"></div>
+                </div>
+
+                <div class="sc-footer">
+                    <span>Generated by PlacePredict AI Model Pipeline • Valid for Campus Placement Drives</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>PlacePredict.AI • Machine Learning Student Placement Prediction Platform</p>
+            <p class="footer-sub">Engineered with Python, Scikit-Learn, Flask & Modern Vanilla CSS</p>
+        </div>
+    </footer>
+
+    <!-- Application Logic -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
