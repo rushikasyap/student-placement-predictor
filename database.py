@@ -28,7 +28,9 @@ if "channel_binding=" in sqlalchemy_url:
 
 # If no DATABASE_URL provided, default to local SQLite for seamless offline testing
 if not DATABASE_URL:
-    sqlalchemy_url = "sqlite:///placement_records.db"
+    import tempfile
+    temp_db_path = os.path.join(tempfile.gettempdir(), "placement_records.db").replace("\\", "/")
+    sqlalchemy_url = f"sqlite:///{temp_db_path}"
     IS_NEON = False
 else:
     IS_NEON = "neon.tech" in DATABASE_URL or "postgresql" in DATABASE_URL
